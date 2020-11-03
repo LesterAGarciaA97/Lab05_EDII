@@ -72,10 +72,11 @@ namespace BibliotecaDeClases.Cifrados
         public static void Cifrar(CipherData info)
         {
             ObtenerDic(info.Key[0], 1);
+            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
 
             using (var reader = new BinaryReader(info.File.OpenReadStream()))
             {
-                using (var streamWriter = new FileStream($"CifradoCesar\\{info.File.FileName}.csr", FileMode.OpenOrCreate))
+                using (var streamWriter = new FileStream($"CifradoCesar\\{NewName}.csr", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
@@ -110,10 +111,10 @@ namespace BibliotecaDeClases.Cifrados
         public static void Decifrar(CipherData info)
         {
             ObtenerDic(info.Key[0], 2);
-
+            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
             using (var reader = new BinaryReader(info.File.OpenReadStream()))
             {
-                using (var streamWriter = new FileStream($"DescrifradoCesar\\{info.File.FileName}.txt", FileMode.OpenOrCreate))
+                using (var streamWriter = new FileStream($"DescrifradoCesar\\{NewName}.txt", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
