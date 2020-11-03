@@ -76,7 +76,7 @@ namespace BibliotecaDeClases.Cifrados
 
             using (var reader = new BinaryReader(info.File.OpenReadStream()))
             {
-                using (var streamWriter = new FileStream($"CifradoCesar\\{NewName}.csr", FileMode.OpenOrCreate))
+                using (var streamWriter = new FileStream($"Temp\\{NewName}.csr", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
@@ -114,7 +114,7 @@ namespace BibliotecaDeClases.Cifrados
             string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
             using (var reader = new BinaryReader(info.File.OpenReadStream()))
             {
-                using (var streamWriter = new FileStream($"DescrifradoCesar\\{NewName}.txt", FileMode.OpenOrCreate))
+                using (var streamWriter = new FileStream($"Temp\\{NewName}.txt", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
