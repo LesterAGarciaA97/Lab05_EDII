@@ -10,7 +10,8 @@ namespace BibliotecaDeClases.Cifrados
     public class Route
     {
         private static string routeDirectory = Environment.CurrentDirectory;
-
+        //Cifrado realizado no utilizado
+        #region CifradoVertical
         public static void CifradoVertical(CipherData info)
         {
             string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
@@ -104,6 +105,7 @@ namespace BibliotecaDeClases.Cifrados
                 }
             }
         }
+        #endregion 
 
         public static void CifradoEspiral(CipherData info)
         {
