@@ -1,0 +1,289 @@
+﻿using BibliotecaDeClases.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace BibliotecaDeClases.Cifrados
+{
+    public class Route
+    {
+        private static string routeDirectory = Environment.CurrentDirectory;
+
+        public static void CifradoVertical(CipherData info)
+        {
+            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            {
+                using (var streamWriter = new FileStream($"temp\\{NewName}.rt", FileMode.OpenOrCreate))
+                {
+                    using (var writer = new BinaryWriter(streamWriter))
+                    {
+                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
+                        var byteBuffer = new byte[bufferLength];
+
+                        while (reader.BaseStream.Position != reader.BaseStream.Length)
+                        {
+                            var matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
+                            byteBuffer = reader.ReadBytes(bufferLength);
+                            var cont = 0;
+
+                            for (int i = 0; i < Convert.ToInt32(info.Key[1]); i++)
+                            {
+                                for (int j = 0; j < Convert.ToInt32(info.Key[0]); j++)
+                                {
+                                    if (cont < byteBuffer.Count())
+                                    {
+                                        matriz[j, i] = byteBuffer[cont];
+                                        cont++;
+                                    }
+                                }
+                            }
+
+                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                            {
+                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
+                                {
+                                    writer.Write(matriz[i, j]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void DecifradoVertical(CipherData info)
+        {
+
+            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            {
+                using (var streamWriter = new FileStream($"temp\\{NewName}.txt", FileMode.OpenOrCreate))
+                {
+                    using (var writer = new BinaryWriter(streamWriter))
+                    {
+                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
+                        var byteBuffer = new byte[bufferLength];
+
+                        while (reader.BaseStream.Position != reader.BaseStream.Length)
+                        {
+                            var matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
+                            byteBuffer = reader.ReadBytes(bufferLength);
+                            var cont = 0;
+
+                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                            {
+                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
+                                {
+                                    if (cont < byteBuffer.Count())
+                                    {
+                                        matriz[i, j] = byteBuffer[cont];
+                                        cont++;
+                                    }
+                                    else
+                                    {
+                                        matriz[i, j] = (byte)0;
+                                    }
+                                }
+                            }
+
+                            for (int i = 0; i < Convert.ToInt32(info.Key[1]); i++)
+                            {
+                                for (int j = 0; j < Convert.ToInt32(info.Key[0]); j++)
+                                {
+                                    if (matriz[j, i] != (byte)0)
+                                    {
+                                        writer.Write(matriz[j, i]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void CifradoEspiral(CipherData info)
+        {
+
+            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            {
+                using (var streamWriter = new FileStream($"temp\\{NewName}.rt", FileMode.OpenOrCreate))
+                {
+                    using (var writer = new BinaryWriter(streamWriter))
+                    {
+                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
+                        var byteBuffer = new byte[bufferLength];
+
+                        while (reader.BaseStream.Position != reader.BaseStream.Length)
+                        {
+                            var Matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
+                            byteBuffer = reader.ReadBytes(bufferLength);
+
+                            var numVueltas = 0;
+                            var posX = 0;
+                            var posY = 0;
+                            var Direccion = "abajo";
+
+                            foreach (var caracter in byteBuffer)
+                            {
+                                if (Direccion == "abajo" && posY != Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posY++;
+                                }
+                                else if (Direccion == "abajo" && posY == Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posX++;
+                                    Direccion = "derecha";
+                                }
+                                else if (Direccion == "derecha" && posX != Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posX++;
+                                }
+                                else if (Direccion == "derecha" && posX == Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posY--;
+                                    Direccion = "arriba";
+                                }
+                                else if (Direccion == "arriba" && posY != numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posY--;
+                                }
+                                else if (Direccion == "arriba" && posY == numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    numVueltas++;
+                                    posX--;
+                                    Direccion = "izquierda";
+                                }
+                                else if (Direccion == "izquierda" && posX != numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posX--;
+                                }
+                                else if (Direccion == "izquierda" && posX == numVueltas)
+                                {
+                                    Matriz[posY, posX] = caracter;
+                                    posY++;
+                                    Direccion = "abajo";
+                                }
+                            }
+
+                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                            {
+                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
+                                {
+                                    writer.Write(Matriz[i, j]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public static void DecifradoEspiral(CipherData info)
+        {
+
+            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            {
+                using (var streamWriter = new FileStream($"temp\\{NewName}.txt", FileMode.OpenOrCreate))
+                {
+                    using (var writer = new BinaryWriter(streamWriter))
+                    {
+                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
+                        var byteBuffer = new byte[bufferLength];
+
+                        while (reader.BaseStream.Position != reader.BaseStream.Length)
+                        {
+                            var Matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
+                            byteBuffer = reader.ReadBytes(bufferLength);
+                            var cont = 0;
+
+                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                            {
+                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
+                                {
+                                    if (cont < byteBuffer.Count())
+                                    {
+                                        Matriz[i, j] = byteBuffer[cont];
+                                        cont++;
+                                    }
+                                    else
+                                    {
+                                        Matriz[i, j] = (byte)0;
+                                    }
+                                }
+                            }
+
+                            var numVueltas = 0;
+                            var posX = 0;
+                            var posY = 0;
+                            var Direccion = "abajo";
+
+                            for (int i = 0; i < bufferLength; i++)
+                            {
+                                if (Matriz[posY, posX] != 0)
+                                {
+                                    if (Direccion == "abajo" && posY != Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posY++;
+                                    }
+                                    else if (Direccion == "abajo" && posY == Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posX++;
+                                        Direccion = "derecha";
+                                    }
+                                    else if (Direccion == "derecha" && posX != Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posX++;
+                                    }
+                                    else if (Direccion == "derecha" && posX == Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posY--;
+                                        Direccion = "arriba";
+                                    }
+                                    else if (Direccion == "arriba" && posY != numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posY--;
+                                    }
+                                    else if (Direccion == "arriba" && posY == numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        numVueltas++;
+                                        posX--;
+                                        Direccion = "izquierda";
+                                    }
+                                    else if (Direccion == "izquierda" && posX != numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posX--;
+                                    }
+                                    else if (Direccion == "izquierda" && posX == numVueltas)
+                                    {
+                                        writer.Write(Matriz[posY, posX]);
+                                        posY++;
+                                        Direccion = "abajo";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
