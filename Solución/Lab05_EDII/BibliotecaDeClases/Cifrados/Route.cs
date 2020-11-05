@@ -12,27 +12,27 @@ namespace BibliotecaDeClases.Cifrados
         private static string routeDirectory = Environment.CurrentDirectory;
         //Cifrado realizado no utilizado
         #region CifradoVertical
-        //public static void CifradoVertical(CipherData info)
+        //public static void CifradoVertical(IFormFile File, int Columns, int Rows)
         //{
-        //    string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-        //    using (var reader = new BinaryReader(info.File.OpenReadStream()))
+        //    string NewName = Path.GetFileNameWithoutExtension(File.FileName);
+        //    using (var reader = new BinaryReader(File.OpenReadStream()))
         //    {
         //        using (var streamWriter = new FileStream($"temp\\{NewName}.rt", FileMode.OpenOrCreate))
         //        {
         //            using (var writer = new BinaryWriter(streamWriter))
         //            {
-        //                var bufferLength = Rows *Columns;
+        //                var bufferLength = Columns * Rows;
         //                var byteBuffer = new byte[bufferLength];
 
         //                while (reader.BaseStream.Position != reader.BaseStream.Length)
         //                {
-        //                    var matriz = new byte[Rows,Columns];
+        //                    var matriz = new byte[Columns, Rows];
         //                    byteBuffer = reader.ReadBytes(bufferLength);
         //                    var cont = 0;
 
-        //                    for (int i = 0; i <Columns; i++)
+        //                    for (int i = 0; i < Rows; i++)
         //                    {
-        //                        for (int j = 0; j < Rows; j++)
+        //                        for (int j = 0; j < Columns; j++)
         //                        {
         //                            if (cont < byteBuffer.Count())
         //                            {
@@ -42,9 +42,9 @@ namespace BibliotecaDeClases.Cifrados
         //                        }
         //                    }
 
-        //                    for (int i = 0; i < Rows; i++)
+        //                    for (int i = 0; i < Columns; i++)
         //                    {
-        //                        for (int j = 0; j <Columns; j++)
+        //                        for (int j = 0; j < Rows; j++)
         //                        {
         //                            writer.Write(matriz[i, j]);
         //                        }
@@ -65,18 +65,18 @@ namespace BibliotecaDeClases.Cifrados
         //        {
         //            using (var writer = new BinaryWriter(streamWriter))
         //            {
-        //                var bufferLength = Rows *Columns;
+        //                var bufferLength = Columns *Rows;
         //                var byteBuffer = new byte[bufferLength];
 
         //                while (reader.BaseStream.Position != reader.BaseStream.Length)
         //                {
-        //                    var matriz = new byte[Rows,Columns];
+        //                    var matriz = new byte[Columns,Rows];
         //                    byteBuffer = reader.ReadBytes(bufferLength);
         //                    var cont = 0;
 
-        //                    for (int i = 0; i < Rows; i++)
+        //                    for (int i = 0; i < Columns; i++)
         //                    {
-        //                        for (int j = 0; j <Columns; j++)
+        //                        for (int j = 0; j <Rows; j++)
         //                        {
         //                            if (cont < byteBuffer.Count())
         //                            {
@@ -90,9 +90,9 @@ namespace BibliotecaDeClases.Cifrados
         //                        }
         //                    }
 
-        //                    for (int i = 0; i <Columns; i++)
+        //                    for (int i = 0; i <Rows; i++)
         //                    {
-        //                        for (int j = 0; j < Rows; j++)
+        //                        for (int j = 0; j < Columns; j++)
         //                        {
         //                            if (matriz[j, i] != (byte)0)
         //                            {
@@ -107,7 +107,7 @@ namespace BibliotecaDeClases.Cifrados
         //}
         #endregion 
 
-        public static void CifradoEspiral(IFormFile File, int Rows, int Columns)
+        public static void CifradoEspiral(IFormFile File, int Columns, int Rows)
         {
 
             string NewName = Path.GetFileNameWithoutExtension(File.FileName);
@@ -117,12 +117,12 @@ namespace BibliotecaDeClases.Cifrados
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
-                        var bufferLength = Rows *Columns;
+                        var bufferLength = Columns *Rows;
                         var byteBuffer = new byte[bufferLength];
 
                         while (reader.BaseStream.Position != reader.BaseStream.Length)
                         {
-                            var Matriz = new byte[Rows,Columns];
+                            var Matriz = new byte[Columns,Rows];
                             byteBuffer = reader.ReadBytes(bufferLength);
 
                             var numVueltas = 0;
@@ -132,23 +132,23 @@ namespace BibliotecaDeClases.Cifrados
 
                             foreach (var caracter in byteBuffer)
                             {
-                                if (Direccion == "abajo" && posY != Rows - 1 - numVueltas)
+                                if (Direccion == "abajo" && posY != Columns - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posY++;
                                 }
-                                else if (Direccion == "abajo" && posY == Rows - 1 - numVueltas)
+                                else if (Direccion == "abajo" && posY == Columns - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posX++;
                                     Direccion = "derecha";
                                 }
-                                else if (Direccion == "derecha" && posX !=Columns - 1 - numVueltas)
+                                else if (Direccion == "derecha" && posX !=Rows - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posX++;
                                 }
-                                else if (Direccion == "derecha" && posX ==Columns - 1 - numVueltas)
+                                else if (Direccion == "derecha" && posX ==Rows - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posY--;
@@ -179,9 +179,9 @@ namespace BibliotecaDeClases.Cifrados
                                 }
                             }
 
-                            for (int i = 0; i < Rows; i++)
+                            for (int i = 0; i < Columns; i++)
                             {
-                                for (int j = 0; j <Columns; j++)
+                                for (int j = 0; j <Rows; j++)
                                 {
                                     writer.Write(Matriz[i, j]);
                                 }
@@ -191,7 +191,7 @@ namespace BibliotecaDeClases.Cifrados
                 }
             }
         }
-        public static void DecifradoEspiral(IFormFile File, int Rows, int Columns)
+        public static void DecifradoEspiral(IFormFile File, int Columns, int Rows)
         {
 
             string NewName = Path.GetFileNameWithoutExtension(File.FileName);
@@ -201,18 +201,18 @@ namespace BibliotecaDeClases.Cifrados
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
-                        var bufferLength = Rows *Columns;
+                        var bufferLength = Columns *Rows;
                         var byteBuffer = new byte[bufferLength];
 
                         while (reader.BaseStream.Position != reader.BaseStream.Length)
                         {
-                            var Matriz = new byte[Rows,Columns];
+                            var Matriz = new byte[Columns,Rows];
                             byteBuffer = reader.ReadBytes(bufferLength);
                             var cont = 0;
 
-                            for (int i = 0; i < Rows; i++)
+                            for (int i = 0; i < Columns; i++)
                             {
-                                for (int j = 0; j <Columns; j++)
+                                for (int j = 0; j <Rows; j++)
                                 {
                                     if (cont < byteBuffer.Count())
                                     {
@@ -235,23 +235,23 @@ namespace BibliotecaDeClases.Cifrados
                             {
                                 if (Matriz[posY, posX] != 0)
                                 {
-                                    if (Direccion == "abajo" && posY != Rows - 1 - numVueltas)
+                                    if (Direccion == "abajo" && posY != Columns - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posY++;
                                     }
-                                    else if (Direccion == "abajo" && posY == Rows - 1 - numVueltas)
+                                    else if (Direccion == "abajo" && posY == Columns - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posX++;
                                         Direccion = "derecha";
                                     }
-                                    else if (Direccion == "derecha" && posX !=Columns - 1 - numVueltas)
+                                    else if (Direccion == "derecha" && posX !=Rows - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posX++;
                                     }
-                                    else if (Direccion == "derecha" && posX ==Columns - 1 - numVueltas)
+                                    else if (Direccion == "derecha" && posX ==Rows - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posY--;
