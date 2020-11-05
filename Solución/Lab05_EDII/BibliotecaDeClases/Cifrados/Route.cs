@@ -1,4 +1,4 @@
-﻿using BibliotecaDeClases.Models;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,117 +12,117 @@ namespace BibliotecaDeClases.Cifrados
         private static string routeDirectory = Environment.CurrentDirectory;
         //Cifrado realizado no utilizado
         #region CifradoVertical
-        public static void CifradoVertical(CipherData info)
-        {
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
-            {
-                using (var streamWriter = new FileStream($"temp\\{NewName}.rt", FileMode.OpenOrCreate))
-                {
-                    using (var writer = new BinaryWriter(streamWriter))
-                    {
-                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
-                        var byteBuffer = new byte[bufferLength];
+        //public static void CifradoVertical(CipherData info)
+        //{
+        //    string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+        //    using (var reader = new BinaryReader(info.File.OpenReadStream()))
+        //    {
+        //        using (var streamWriter = new FileStream($"temp\\{NewName}.rt", FileMode.OpenOrCreate))
+        //        {
+        //            using (var writer = new BinaryWriter(streamWriter))
+        //            {
+        //                var bufferLength = Rows *Columns;
+        //                var byteBuffer = new byte[bufferLength];
 
-                        while (reader.BaseStream.Position != reader.BaseStream.Length)
-                        {
-                            var matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
-                            byteBuffer = reader.ReadBytes(bufferLength);
-                            var cont = 0;
+        //                while (reader.BaseStream.Position != reader.BaseStream.Length)
+        //                {
+        //                    var matriz = new byte[Rows,Columns];
+        //                    byteBuffer = reader.ReadBytes(bufferLength);
+        //                    var cont = 0;
 
-                            for (int i = 0; i < Convert.ToInt32(info.Key[1]); i++)
-                            {
-                                for (int j = 0; j < Convert.ToInt32(info.Key[0]); j++)
-                                {
-                                    if (cont < byteBuffer.Count())
-                                    {
-                                        matriz[j, i] = byteBuffer[cont];
-                                        cont++;
-                                    }
-                                }
-                            }
+        //                    for (int i = 0; i <Columns; i++)
+        //                    {
+        //                        for (int j = 0; j < Rows; j++)
+        //                        {
+        //                            if (cont < byteBuffer.Count())
+        //                            {
+        //                                matriz[j, i] = byteBuffer[cont];
+        //                                cont++;
+        //                            }
+        //                        }
+        //                    }
 
-                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
-                            {
-                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
-                                {
-                                    writer.Write(matriz[i, j]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //                    for (int i = 0; i < Rows; i++)
+        //                    {
+        //                        for (int j = 0; j <Columns; j++)
+        //                        {
+        //                            writer.Write(matriz[i, j]);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
-        public static void DecifradoVertical(CipherData info)
-        {
+        //public static void DecifradoVertical(CipherData info)
+        //{
 
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
-            {
-                using (var streamWriter = new FileStream($"temp\\{NewName}.txt", FileMode.OpenOrCreate))
-                {
-                    using (var writer = new BinaryWriter(streamWriter))
-                    {
-                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
-                        var byteBuffer = new byte[bufferLength];
+        //    string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+        //    using (var reader = new BinaryReader(info.File.OpenReadStream()))
+        //    {
+        //        using (var streamWriter = new FileStream($"temp\\{NewName}.txt", FileMode.OpenOrCreate))
+        //        {
+        //            using (var writer = new BinaryWriter(streamWriter))
+        //            {
+        //                var bufferLength = Rows *Columns;
+        //                var byteBuffer = new byte[bufferLength];
 
-                        while (reader.BaseStream.Position != reader.BaseStream.Length)
-                        {
-                            var matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
-                            byteBuffer = reader.ReadBytes(bufferLength);
-                            var cont = 0;
+        //                while (reader.BaseStream.Position != reader.BaseStream.Length)
+        //                {
+        //                    var matriz = new byte[Rows,Columns];
+        //                    byteBuffer = reader.ReadBytes(bufferLength);
+        //                    var cont = 0;
 
-                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
-                            {
-                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
-                                {
-                                    if (cont < byteBuffer.Count())
-                                    {
-                                        matriz[i, j] = byteBuffer[cont];
-                                        cont++;
-                                    }
-                                    else
-                                    {
-                                        matriz[i, j] = (byte)0;
-                                    }
-                                }
-                            }
+        //                    for (int i = 0; i < Rows; i++)
+        //                    {
+        //                        for (int j = 0; j <Columns; j++)
+        //                        {
+        //                            if (cont < byteBuffer.Count())
+        //                            {
+        //                                matriz[i, j] = byteBuffer[cont];
+        //                                cont++;
+        //                            }
+        //                            else
+        //                            {
+        //                                matriz[i, j] = (byte)0;
+        //                            }
+        //                        }
+        //                    }
 
-                            for (int i = 0; i < Convert.ToInt32(info.Key[1]); i++)
-                            {
-                                for (int j = 0; j < Convert.ToInt32(info.Key[0]); j++)
-                                {
-                                    if (matriz[j, i] != (byte)0)
-                                    {
-                                        writer.Write(matriz[j, i]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //                    for (int i = 0; i <Columns; i++)
+        //                    {
+        //                        for (int j = 0; j < Rows; j++)
+        //                        {
+        //                            if (matriz[j, i] != (byte)0)
+        //                            {
+        //                                writer.Write(matriz[j, i]);
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
         #endregion 
 
-        public static void CifradoEspiral(CipherData info)
+        public static void CifradoEspiral(IFormFile File, int Rows, int Columns)
         {
 
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            string NewName = Path.GetFileNameWithoutExtension(File.FileName);
+            using (var reader = new BinaryReader(File.OpenReadStream()))
             {
                 using (var streamWriter = new FileStream($"temp\\{NewName}.rt", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
-                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
+                        var bufferLength = Rows *Columns;
                         var byteBuffer = new byte[bufferLength];
 
                         while (reader.BaseStream.Position != reader.BaseStream.Length)
                         {
-                            var Matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
+                            var Matriz = new byte[Rows,Columns];
                             byteBuffer = reader.ReadBytes(bufferLength);
 
                             var numVueltas = 0;
@@ -132,23 +132,23 @@ namespace BibliotecaDeClases.Cifrados
 
                             foreach (var caracter in byteBuffer)
                             {
-                                if (Direccion == "abajo" && posY != Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                if (Direccion == "abajo" && posY != Rows - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posY++;
                                 }
-                                else if (Direccion == "abajo" && posY == Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                else if (Direccion == "abajo" && posY == Rows - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posX++;
                                     Direccion = "derecha";
                                 }
-                                else if (Direccion == "derecha" && posX != Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                else if (Direccion == "derecha" && posX !=Columns - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posX++;
                                 }
-                                else if (Direccion == "derecha" && posX == Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                else if (Direccion == "derecha" && posX ==Columns - 1 - numVueltas)
                                 {
                                     Matriz[posY, posX] = caracter;
                                     posY--;
@@ -179,9 +179,9 @@ namespace BibliotecaDeClases.Cifrados
                                 }
                             }
 
-                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                            for (int i = 0; i < Rows; i++)
                             {
-                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
+                                for (int j = 0; j <Columns; j++)
                                 {
                                     writer.Write(Matriz[i, j]);
                                 }
@@ -191,28 +191,28 @@ namespace BibliotecaDeClases.Cifrados
                 }
             }
         }
-        public static void DecifradoEspiral(CipherData info)
+        public static void DecifradoEspiral(IFormFile File, int Rows, int Columns)
         {
 
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            string NewName = Path.GetFileNameWithoutExtension(File.FileName);
+            using (var reader = new BinaryReader(File.OpenReadStream()))
             {
                 using (var streamWriter = new FileStream($"temp\\{NewName}.txt", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
-                        var bufferLength = Convert.ToInt32(info.Key[0]) * Convert.ToInt32(info.Key[1]);
+                        var bufferLength = Rows *Columns;
                         var byteBuffer = new byte[bufferLength];
 
                         while (reader.BaseStream.Position != reader.BaseStream.Length)
                         {
-                            var Matriz = new byte[Convert.ToInt32(info.Key[0]), Convert.ToInt32(info.Key[1])];
+                            var Matriz = new byte[Rows,Columns];
                             byteBuffer = reader.ReadBytes(bufferLength);
                             var cont = 0;
 
-                            for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                            for (int i = 0; i < Rows; i++)
                             {
-                                for (int j = 0; j < Convert.ToInt32(info.Key[1]); j++)
+                                for (int j = 0; j <Columns; j++)
                                 {
                                     if (cont < byteBuffer.Count())
                                     {
@@ -235,23 +235,23 @@ namespace BibliotecaDeClases.Cifrados
                             {
                                 if (Matriz[posY, posX] != 0)
                                 {
-                                    if (Direccion == "abajo" && posY != Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                    if (Direccion == "abajo" && posY != Rows - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posY++;
                                     }
-                                    else if (Direccion == "abajo" && posY == Convert.ToInt32(info.Key[0]) - 1 - numVueltas)
+                                    else if (Direccion == "abajo" && posY == Rows - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posX++;
                                         Direccion = "derecha";
                                     }
-                                    else if (Direccion == "derecha" && posX != Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                    else if (Direccion == "derecha" && posX !=Columns - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posX++;
                                     }
-                                    else if (Direccion == "derecha" && posX == Convert.ToInt32(info.Key[1]) - 1 - numVueltas)
+                                    else if (Direccion == "derecha" && posX ==Columns - 1 - numVueltas)
                                     {
                                         writer.Write(Matriz[posY, posX]);
                                         posY--;

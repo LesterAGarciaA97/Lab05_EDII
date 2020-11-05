@@ -1,4 +1,4 @@
-﻿using BibliotecaDeClases.Models;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,16 +11,16 @@ namespace BibliotecaDeClases.Cifrados
     {
         private static string routeDirectory = Environment.CurrentDirectory;
 
-        public static void Cifrar(CipherData info)
+        public static void Cifrar(IFormFile File, int Levels)
         {
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            string NewName = Path.GetFileNameWithoutExtension(File.FileName);
+            using (var reader = new BinaryReader(File.OpenReadStream()))
             {
                 using (var streamWriter = new FileStream($"temp\\{NewName}.zz", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
-                        var GrupoOlas = (2 * Convert.ToInt32(info.Key[0])) - 2;
+                        var GrupoOlas = (2 * Levels) - 2;
                         var len = (float)reader.BaseStream.Length / (float)GrupoOlas;
                         var cantOlas = len % 1 <= 0.5 ? Math.Round(len) + 1 : Math.Round(len);
                         cantOlas = Convert.ToInt32(cantOlas);
@@ -28,9 +28,9 @@ namespace BibliotecaDeClases.Cifrados
                         var pos = 0;
                         var contNivel = 0;
 
-                        var mensaje = new List<byte>[Convert.ToInt32(info.Key[0])];
+                        var mensaje = new List<byte>[Levels];
 
-                        for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                        for (int i = 0; i < Levels; i++)
                         {
                             mensaje[i] = new List<byte>();
                         }
@@ -48,17 +48,17 @@ namespace BibliotecaDeClases.Cifrados
                                     mensaje[0].Add(caracter);
                                     contNivel = 0;
                                 }
-                                else if (pos % GrupoOlas == Convert.ToInt32(info.Key[0]) - 1)
+                                else if (pos % GrupoOlas == Levels - 1)
                                 {
-                                    mensaje[Convert.ToInt32(info.Key[0]) - 1].Add(caracter);
-                                    contNivel = Convert.ToInt32(info.Key[0]) - 1;
+                                    mensaje[Levels - 1].Add(caracter);
+                                    contNivel = Levels - 1;
                                 }
-                                else if (pos % GrupoOlas < Convert.ToInt32(info.Key[0]) - 1)
+                                else if (pos % GrupoOlas < Levels - 1)
                                 {
                                     contNivel++;
                                     mensaje[contNivel].Add(caracter);
                                 }
-                                else if (pos % GrupoOlas > Convert.ToInt32(info.Key[0]) - 1)
+                                else if (pos % GrupoOlas > Levels - 1)
                                 {
                                     contNivel--;
                                     mensaje[contNivel].Add(caracter);
@@ -67,9 +67,9 @@ namespace BibliotecaDeClases.Cifrados
                             }
                         }
 
-                        for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                        for (int i = 0; i < Levels; i++)
                         {
-                            var cantIteracion = i == 0 || i == Convert.ToInt32(info.Key[0]) - 1 ? cantOlas : cantOlas * 2;
+                            var cantIteracion = i == 0 || i == Levels - 1 ? cantOlas : cantOlas * 2;
                             var inicio = mensaje[i].Count();
                             for (int j = inicio; j < cantIteracion; j++)
                             {
@@ -84,27 +84,27 @@ namespace BibliotecaDeClases.Cifrados
 
         ///Decifrar
 
-        public static void Decifrar(CipherData info)
+        public static void Decifrar(IFormFile File, int Levels)
         {
 
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            string NewName = Path.GetFileNameWithoutExtension(File.FileName);
+            using (var reader = new BinaryReader(File.OpenReadStream()))
             {
                 using (var streamWriter = new FileStream($"temp\\{NewName}.txt", FileMode.OpenOrCreate))
                 {
                     using (var writer = new BinaryWriter(streamWriter))
                     {
-                        var GrupoOlas = (2 * Convert.ToInt32(info.Key[0])) - 2;
+                        var GrupoOlas = (2 * Levels) - 2;
                         var cantOlas = Convert.ToInt32(reader.BaseStream.Length) / GrupoOlas;
-                        var intermedios = (Convert.ToInt32(reader.BaseStream.Length) - (2 * cantOlas)) / (Convert.ToInt32(info.Key[0]) - 2);
+                        var intermedios = (Convert.ToInt32(reader.BaseStream.Length) - (2 * cantOlas)) / (Levels - 2);
 
                         var pos = 0;
                         var contNivel = 0;
                         var contIntermedio = 0;
 
-                        var mensaje = new Queue<byte>[Convert.ToInt32(info.Key[0])];
+                        var mensaje = new Queue<byte>[Levels];
 
-                        for (int i = 0; i < Convert.ToInt32(info.Key[0]); i++)
+                        for (int i = 0; i < Levels; i++)
                         {
                             mensaje[i] = new Queue<byte>();
                         }
@@ -117,7 +117,7 @@ namespace BibliotecaDeClases.Cifrados
                             byteBuffer = reader.ReadBytes(bufferLength);
                             foreach (var caracter in byteBuffer)
                             {
-                                if (contNivel == Convert.ToInt32(info.Key[0]) - 1)
+                                if (contNivel == Levels - 1)
                                 {
                                     mensaje[contNivel].Enqueue(caracter);
                                 }
@@ -154,7 +154,7 @@ namespace BibliotecaDeClases.Cifrados
                         //True es hacia abajo
                         //False es hacia arriba
 
-                        while (mensaje[1].Count() != 0 || (Convert.ToInt32(info.Key[0]) == 2 && mensaje[1].Count() != 0))
+                        while (mensaje[1].Count() != 0 || (Levels == 2 && mensaje[1].Count() != 0))
                         {
                             if (contNivel == 0)
                             {
@@ -162,7 +162,7 @@ namespace BibliotecaDeClases.Cifrados
                                 contNivel = 1;
                                 direccion = true;
                             }
-                            else if (contNivel < Convert.ToInt32(info.Key[0]) - 1 && direccion)
+                            else if (contNivel < Levels - 1 && direccion)
                             {
                                 writer.Write(mensaje[contNivel].Dequeue());
                                 contNivel++;
@@ -172,10 +172,10 @@ namespace BibliotecaDeClases.Cifrados
                                 writer.Write(mensaje[contNivel].Dequeue());
                                 contNivel--;
                             }
-                            else if (contNivel == Convert.ToInt32(info.Key[0]) - 1)
+                            else if (contNivel == Levels - 1)
                             {
                                 writer.Write(mensaje[contNivel].Dequeue());
-                                contNivel = Convert.ToInt32(info.Key[0]) - 2;
+                                contNivel = Levels - 2;
                                 direccion = false;
                             }
                         }

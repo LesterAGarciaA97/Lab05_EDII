@@ -1,4 +1,4 @@
-﻿using BibliotecaDeClases.Models;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,15 +69,16 @@ namespace BibliotecaDeClases.Cifrados
             }
         }
 
-        public static void Cifrar(CipherData info)
+        public static void Cifrar(IFormFile File, string Word )
         {
-            ObtenerDic(info.Key[0], 1);
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
+            ObtenerDic(Word, 1);
+            string NewName = Path.GetFileNameWithoutExtension(File.FileName);
 
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            using (var reader = new BinaryReader(File.OpenReadStream()))
             {
                 using (var streamWriter = new FileStream($"Temp\\{NewName}.csr", FileMode.OpenOrCreate))
                 {
+                 
                     using (var writer = new BinaryWriter(streamWriter))
                     {
                         var bufferLength = 10000;
@@ -104,15 +105,16 @@ namespace BibliotecaDeClases.Cifrados
                             }
                         }
                     }
+                    reader.Close();
                 }
             }
         }
 
-        public static void Decifrar(CipherData info)
+        public static void Decifrar(IFormFile File, string Word)
         {
-            ObtenerDic(info.Key[0], 2);
-            string NewName = Path.GetFileNameWithoutExtension(info.File.FileName);
-            using (var reader = new BinaryReader(info.File.OpenReadStream()))
+            ObtenerDic(Word, 2);
+            string NewName = Path.GetFileNameWithoutExtension(File.FileName);
+            using (var reader = new BinaryReader(File.OpenReadStream()))
             {
                 using (var streamWriter = new FileStream($"Temp\\{NewName}.txt", FileMode.OpenOrCreate))
                 {
