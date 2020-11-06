@@ -9,7 +9,6 @@ namespace BibliotecaDeClases.Cifrados
     public class ZigZag
     {
         private static string routeDirectory = Environment.CurrentDirectory;
-
         public static void Cifrar(IFormFile File, int Levels)
         {
             string NewName = Path.GetFileNameWithoutExtension(File.FileName);
@@ -82,7 +81,6 @@ namespace BibliotecaDeClases.Cifrados
         }
 
         ///Decifrar
-
         public static void Decifrar(IFormFile File, int Levels)
         {
 

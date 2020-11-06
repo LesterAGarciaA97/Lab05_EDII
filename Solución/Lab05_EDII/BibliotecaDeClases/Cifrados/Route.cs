@@ -107,7 +107,6 @@ namespace BibliotecaDeClases.Cifrados
 
         public static void CifradoEspiral(IFormFile File, int Columns, int Rows)
         {
-
             string NewName = Path.GetFileNameWithoutExtension(File.FileName);
             using (var reader = new BinaryReader(File.OpenReadStream()))
             {

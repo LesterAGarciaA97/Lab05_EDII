@@ -7,7 +7,6 @@ namespace BibliotecaDeClases.Cifrados
 {
     public class Cesar
     {
-
         private static Dictionary<int, int> DirAlpha = new Dictionary<int, int>();
         private static string routeDirectory = Environment.CurrentDirectory;
 

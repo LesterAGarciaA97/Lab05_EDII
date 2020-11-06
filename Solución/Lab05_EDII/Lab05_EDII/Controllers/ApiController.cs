@@ -105,7 +105,6 @@ namespace Lab05_EDII.Controllers
             var extensionFile = Path.GetExtension(path).ToLowerInvariant();
             DeleteDirectoy();
             return File(Memory, GetMimeTypes()[extensionFile], Path.GetFileName(path));
-
         }
         /// <summary>
         /// Procedimiento para eliminar la carpeta temporal
@@ -132,6 +131,5 @@ namespace Lab05_EDII.Controllers
                 {".rt","text/plain"},
             };
         }
-       
     }
 }
