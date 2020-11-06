@@ -17,9 +17,9 @@ namespace Lab05_EDII.Controllers
         /// <summary>
         /// Metodo para cifrar, esto se realizara segun el valor que se ingrese desde la ruta
         /// </summary>
-        /// <param name="method"></param>
-        /// <param name="file"></param>
-        /// <param name="key"></param>
+        /// <param name="method">Metodo de cifrado</param>
+        /// <param name="file">Archivo a cifrar</param>
+        /// <param name="key">Dependiendo del metodo se enviara el valor necesario</param>
         /// <returns></returns>
         [HttpPost("cipher/{method}")]
         public async Task<IActionResult> Cipher(string method, IFormFile file, [FromForm] Key key) {
@@ -29,30 +29,31 @@ namespace Lab05_EDII.Controllers
             switch (methodToUpper)
             {
                 case "ZIGZAG": //.zz
-                    ZigZag.Cifrar(file, key.Levels);
+                    ZigZag.Cifrar(file, key.levels);
                     var extZigZag = ".zz";
                     var PathZz = Environment.CurrentDirectory + "\\temp\\" + Path.GetFileNameWithoutExtension(file.FileName) + extZigZag;
                     path = PathZz;
                     break;
                 case "CESAR": //.csr
-                    Cesar.Cifrar(file, key.Word);
+                    Cesar.Cifrar(file, key.word);
                     var extCesar = ".csr";
                     var PathCsr = Environment.CurrentDirectory + "\\temp\\" + Path.GetFileNameWithoutExtension(file.FileName) + extCesar;
                     path = PathCsr;
                     break;
                 case "CÉSAR":
-                    Cesar.Cifrar(file, key.Word);
+                    Cesar.Cifrar(file, key.word);
                     var extCesar1 = ".csr";
                     var PathCsr2 = Environment.CurrentDirectory + "\\temp\\" + Path.GetFileNameWithoutExtension(file.FileName) + extCesar1;
                     path = PathCsr2;
                     break;
                 case "RUTA": //.rt
-                    Route.CifradoEspiral(file, key.Columns, key.Rows);
+                    Route.CifradoEspiral(file, key.columns, key.rows);
                     var extRoute = ".rt";
                     var PathRt = Environment.CurrentDirectory + "\\temp\\" + Path.GetFileNameWithoutExtension(file.FileName) + extRoute;
                     path = PathRt;
                     break;
                 default:
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                     break;
             }
 
@@ -83,15 +84,16 @@ namespace Lab05_EDII.Controllers
             switch (ExtensionFile)
             {
                 case ".zz":
-                    ZigZag.Decifrar(file, key.Levels);
+                    ZigZag.Decifrar(file, key.levels);
                     break;
                 case ".csr":
-                    Cesar.Decifrar(file, key.Word);
+                    Cesar.Decifrar(file, key.word);
                     break;
                 case ".rt":
-                    Route.DecifradoEspiral(file, key.Columns, key.Rows);
+                    Route.DecifradoEspiral(file, key.columns, key.rows);
                     break;
                 default:
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                     break;
             }
             var path = Environment.CurrentDirectory + "\\temp\\" + Path.GetFileNameWithoutExtension(file.FileName) + ".txt";

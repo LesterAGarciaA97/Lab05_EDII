@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\HRZCz\OneDrive\Escritorio\URL-Segundo Ciclo 2020\Estructura de Datos II\Laboratorio\Lab05_EDII\Lab05_EDII\Solución\Lab05_EDII\Lab05_EDII\Lab05_EDII.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Lab05_EDII</name>
+    </assembly>
+    <members>
+        <member name="M:Lab05_EDII.Controllers.ApiController.Cipher(System.String,Microsoft.AspNetCore.Http.IFormFile,Lab05_EDII.Models.Key)">
+            <summary>
+            Metodo para cifrar, esto se realizara segun el valor que se ingrese desde la ruta
+            </summary>
+            <param name="method">Metodo de cifrado</param>
+            <param name="file">Archivo a cifrar</param>
+            <param name="key">Dependiendo del metodo se enviara el valor necesario</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lab05_EDII.Controllers.ApiController.Decipher(Microsoft.AspNetCore.Http.IFormFile,Lab05_EDII.Models.Key)">
+            <summary>
+            Metodo para decifrar, se realizara el decifrado segun la ruta que tenga el archivo 
+            </summary>
+            <param name="file">Archivo a Decifrar</param>
+            <param name="key">Dependiendo del metodo se enviara el valor necesario</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lab05_EDII.Controllers.ApiController.DeleteDirectoy">
+            <summary>
+            Procedimiento para eliminar la carpeta temporal
+            </summary>
+        </member>
+        <member name="M:Lab05_EDII.Controllers.ApiController.CreateDirectory">
+            <summary>
+            Procedimiento para crear la carpeta temporal
+            </summary>
+        </member>
+        <member name="M:Lab05_EDII.Controllers.ApiController.GetMimeTypes">
+            <summary>
+            Metodo donde crea el diccionario con las diferentes extension, y con tipo de contenido de la extension
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Lab05_EDII.Models.Key.word">
+            <summary>
+            Palabra clave para cifrado Cesar
+            </summary>
+        </member>
+        <member name="P:Lab05_EDII.Models.Key.rows">
+            <summary>
+            Cantidad de filas para cifrado ruta espiral
+            </summary>
+        </member>
+        <member name="P:Lab05_EDII.Models.Key.columns">
+            <summary>
+            Cantidad de columnas para cifrado ruta espiral
+            </summary>
+        </member>
+        <member name="P:Lab05_EDII.Models.Key.levels">
+            <summary>
+            Cantidad de niveles para cifrado Zig Zag
+            </summary>
+        </member>
+    </members>
+</doc>

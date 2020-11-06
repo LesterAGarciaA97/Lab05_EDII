@@ -7,9 +7,9 @@ namespace Lab05_EDII.Models
 {
     interface IKey
     {
-        string Word { get; set; }
-        int Levels { get; set; }
-        int Rows { get; set; }
-        int Columns { get; set; }
+        string word { get; set; }
+        int levels { get; set; }
+        int rows { get; set; }
+        int columns { get; set; }
     }
 }
